@@ -1,38 +1,38 @@
 import info.gridworld.actor.Actor;
 import info.gridworld.actor.Critter;
 import info.gridworld.grid.Location;
+import info.gridworld.grid.Grid;
 
 import java.util.ArrayList;
 
+public class ChameleonKid extends ChameleonCritter {
 
-
-public class ChameleonKid extends ModifiedChameleonCritter {
-
-    public void processActors(ArrayList<Actor> actors)
+    public ArrayList<Actor> getActors()
     {
-        int n = actors.size();
-        if (n == 0)
-            return;
-        int r = (int) (Math.random() * n);
+            ArrayList<Actor> actors = new ArrayList<Actor>();
 
-        Actor other = actors.get(r);
-        setColor(other.getColor());
+            Grid<Actor> gr = getGrid();
+            if (gr == null) {
+                return actors;
+            }
+
+            Location loc = getLocation();
+            Location front = loc.getAdjacentLocation(getDirection());
+            Location back = loc.getAdjacentLocation(getDirection() + 180);
+            if (gr.isValid(front)) {
+                    Actor actorFront = getGrid().get(front);
+                    if (actorFront != null) {
+                            actors.add(actorFront);
+                    }
+            }
+
+            if (gr.isValid(back)){
+                    Actor actorBack = getGrid().get(back);
+                    if (actorBack != null) {
+                            actors.add(actorBack);        
+                    }
+            } 
+
+        return actors;
     }
-
-    public ArrayList<Actor> getActors() {
-    	ArrayList<Actor> actors = new ArrayList<Actor>();
-    }
-
-    /**
-     * Turns towards the new location as it moves.
-     */
-    public void makeMove(Location loc)
-    {
-        setDirection(getLocation().getDirectionToward(loc));
-        super.makeMove(loc);
-    }
-}
-
-
-
 }
